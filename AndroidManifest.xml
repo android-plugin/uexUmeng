@@ -59,7 +59,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <meta-data android:value="563061fae0f55aec10000066" android:name="UMENG_APPKEY" ></meta-data>
+        <meta-data android:value="563061fae0f55aec10000066" android:name="UMENG_APPKEY"/>
         <meta-data android:value="uex_umeng_channel" android:name="UMENG_CHANNEL"/>
     </application>
 
