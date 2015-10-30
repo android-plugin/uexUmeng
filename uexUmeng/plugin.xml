@@ -3,5 +3,6 @@
     <plugin
         className="org.zywx.wbpalmstar.plugin.uexumeng.EUExUmeng" uexName="uexUmeng" >
         <method name="onEvent" />
+        <method name="getDeviceInfo" />
     </plugin>
 </uexplugins>
