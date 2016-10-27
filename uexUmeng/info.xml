@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <uexplugins>
     <plugin
-        uexName="uexUmeng" version="3.0.0" build="0">
-        <info>0:友盟统计插件</info>
+        uexName="uexUmeng" version="3.0.1" build="1">
+        <info>1:SDK升级至6.0.3</info>
+        <build>0:友盟统计插件</build>
     </plugin>
 </uexplugins>
