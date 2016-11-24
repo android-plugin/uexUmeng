@@ -1,10 +1,7 @@
 package org.zywx.wbpalmstar.plugin.uexumeng;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
@@ -18,12 +15,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 public class EUExUmeng extends EUExBase{
-    private static final String BUNDLE_DATA = "data";
-    private static final String TAG = "EUExUmeng";
-    private static final int MSG_ADD_EVENT = 1;
-    private static final int MSG_GET_DEVICE_INFO = 2;
-
-    private static final String INVALID_PARAM = "Invalid Param";
     private static final String JSON_FORMAT_ERROR = "JSON Format Error";
 
     public static final String FUN_ON_CALLBACK = "javascript:uexUmeng.cbGetDeviceInfo";
@@ -48,30 +39,6 @@ public class EUExUmeng extends EUExBase{
             errorCallback(0, 0, "error params!");
             return;
         }
-        Message msg = new Message();
-        msg.obj = this;
-        msg.what = MSG_ADD_EVENT;
-        Bundle bd = new Bundle();
-        bd.putStringArray(BUNDLE_DATA, params);
-        msg.setData(bd);
-        mHandler.sendMessage(msg);
-    }
-
-    public void getDeviceInfo(String [] params) {
-        Message msg = new Message();
-        msg.obj = this;
-        msg.what = MSG_GET_DEVICE_INFO;
-        Bundle bd = new Bundle();
-        bd.putStringArray(BUNDLE_DATA, params);
-        msg.setData(bd);
-        mHandler.sendMessage(msg);
-    }
-
-    private void onEventMsg(String [] params) {
-        if (params.length == 0) {
-            Toast.makeText(context, INVALID_PARAM, Toast.LENGTH_SHORT).show();
-            return;
-        }
         if (params.length == 1) {
             MobclickAgent.onEvent(context, params[0]);
         } else if (params.length == 2) {
@@ -92,16 +59,20 @@ public class EUExUmeng extends EUExBase{
         }
     }
 
-    private void getDeviceInfoMsg(String [] params) {
-        String result = getDeviceInfo(context);
-        onCallback(FUN_ON_CALLBACK + "('" + result + "')");
-        Log.i(TAG, result);
+    public JSONObject getDeviceInfo(String [] params) {
+        JSONObject result = getDeviceInfo(context);
+        String resultStr = null;
+        if (result != null) {
+            resultStr = result.toString();
+            onCallback(FUN_ON_CALLBACK + "('" + resultStr + "')");
+        }
+        return result;
     }
 
     //友盟的代码，获取device info.
-    public String getDeviceInfo(Context context) {
+    public JSONObject getDeviceInfo(Context context) {
         try{
-            org.json.JSONObject json = new org.json.JSONObject();
+            JSONObject json = new JSONObject();
             android.telephony.TelephonyManager tm = (android.telephony.TelephonyManager) context
                     .getSystemService(Context.TELEPHONY_SERVICE);
             String device_id = tm.getDeviceId();
@@ -115,29 +86,11 @@ public class EUExUmeng extends EUExBase{
                 device_id = android.provider.Settings.Secure.getString(context.getContentResolver(),android.provider.Settings.Secure.ANDROID_ID);
             }
             json.put("device_id", device_id);
-            return json.toString();
+            return json;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
-    }
-
-    @Override
-    public void onHandleMessage(Message message) {
-        if(message == null){
-            return;
-        }
-        Bundle bundle = message.getData();
-        switch (message.what) {
-            case MSG_ADD_EVENT:
-                onEventMsg(bundle.getStringArray(BUNDLE_DATA));
-                break;
-            case MSG_GET_DEVICE_INFO:
-                getDeviceInfoMsg(bundle.getStringArray(BUNDLE_DATA));
-                break;
-            default:
-                super.onHandleMessage(message);
-        }
     }
 
     @Override
