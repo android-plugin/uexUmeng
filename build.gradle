@@ -30,7 +30,12 @@ android {
     lintOptions {
         abortOnError false
     }
-
+    defaultConfig {
+        // 应用的包名
+        applicationId "org.zywx.wbpalmstar.widgetone.uexUmeng"
+        minSdkVersion 14
+        multiDexEnabled true
+    }
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
